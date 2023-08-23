@@ -62,7 +62,6 @@ async function sendCode() {
 
 <template>
   <form class="max-w-md" @submit.prevent="submitAuthForm">
-    <h2>Вход в личный кабинет</h2>
     <authByPhone.InputPhone
       v-if="currentStage === Stages.phone"
       v-model="phone" />

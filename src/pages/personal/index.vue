@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { UserCard } from '~/entities/user'
-import { AuthForm } from '~/widgets';
 
 const user = {
   id: 1,
@@ -11,6 +10,8 @@ const user = {
 </script>
 
 <template>
-  <UserCard :user="user" />
-  <AuthForm />
+  <div class="container mx-auto px-4 pt-10">
+    <h2 class="text-lg font-semibold text-slate-900 mb-8">Личный кабинет</h2>
+    <UserCard :user="user" />
+  </div>
 </template>
