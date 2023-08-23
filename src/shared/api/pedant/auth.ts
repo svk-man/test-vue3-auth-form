@@ -19,7 +19,7 @@ export const RESPONSE_STATES = {
 } as const;
 
 export const RESPONSE_ERROR_MESSAGES = {
-  INCORRECT_CODE: 'Код не подходит, попробуйте отправить SMS повторно'
+  INCORRECT_CODE: 'Код не подходит, введите код повторно'
 }
 
 export type GenerateOtpParams = {

@@ -4,25 +4,16 @@ import { UserCard } from '~/entities/user';
 import { User, pedantApi, USER_FIELDS } from '~/shared/api';
 import { AxiosResponse } from 'axios';
 import { RESPONSE_STATES, GetSubscriptionsResponse } from '~/shared/api/pedant/auth';
+import { authProcess } from '~/processes/index';
 
 const user = ref<User>();
 
 onMounted(async () => {
-  const token = loadToken();
+  const token = authProcess.loadToken();
   if (token) {
     await getUser(token);
   }
 });
-
-function loadToken(): string {
-  const cookieItems = document.cookie.split('; ');
-  const cookieToken = cookieItems.find(cookieItem => cookieItem.startsWith('token='));
-  if (cookieToken) {
-    return cookieToken.slice(cookieToken.indexOf('=') + 1);
-  }
-
-  return '';
-}
 
 async function getUser(token: string) {
   await pedantApi.auth.getSubscriptions(token)

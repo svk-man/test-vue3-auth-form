@@ -6,6 +6,7 @@ import { ref, watch } from 'vue'
 import { authByPhone } from '~/features/auth'
 import { pedantApi } from '~/shared/api';
 import { useRouter } from 'vue-router';
+import { authProcess } from '~/processes/index';
 
 enum Stages {
   'phone',
@@ -50,7 +51,7 @@ async function sendCode() {
   await pedantApi.auth.verifyOtp(data)
     .then((result: AxiosResponse) => {
       if (result.statusText === RESPONSE_STATES.OK) {
-        saveToken(result.data['access_token']);
+        authProcess.saveToken(result.data['access_token']);
         router.push({ path: '/personal' })
       }
     })
@@ -61,15 +62,6 @@ async function sendCode() {
         // handle error
       }
     });
-}
-
-function saveToken(token: string) {
-  const date = new Date();
-  date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
-
-  const expires = "expires=" + date.toUTCString();
-  document.cookie =
-    "token=" + token + ";" + expires + ";path=/";
 }
 </script>
 
