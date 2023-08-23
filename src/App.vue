@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { UserCard } from './entities/user'
+import { AuthForm } from './widgets';
 
 const user = {
   id: 1,
@@ -11,4 +12,5 @@ const user = {
 
 <template>
   <UserCard :user="user" />
+  <AuthForm />
 </template>
