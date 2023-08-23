@@ -1,17 +1,54 @@
 <script setup lang="ts">
-import { UserCard } from '~/entities/user'
+import { onMounted, ref  } from 'vue';
+import { UserCard } from '~/entities/user';
+import { User, pedantApi, USER_FIELDS } from '~/shared/api';
+import { AxiosResponse } from 'axios';
+import { RESPONSE_STATES, GetSubscriptionsResponse } from '~/shared/api/pedant/auth';
 
-const user = {
-  id: 1,
-  name: 'Петров Петр Петрович',
-  avatar: 'https://freesvg.org/img/Cartoon-Man-Avatar-2.png',
-  phone: '+7 (965) 373-92-01'
+const user = ref<User>();
+
+onMounted(async () => {
+  const token = loadToken();
+  if (token) {
+    await getUser(token);
+  }
+});
+
+function loadToken(): string {
+  const cookieItems = document.cookie.split('; ');
+  const cookieToken = cookieItems.find(cookieItem => cookieItem.startsWith('token='));
+  if (cookieToken) {
+    return cookieToken.slice(cookieToken.indexOf('=') + 1);
+  }
+
+  return '';
+}
+
+async function getUser(token: string) {
+  await pedantApi.auth.getSubscriptions(token)
+    .then((result: AxiosResponse<GetSubscriptionsResponse>) => {
+      if (result.statusText === RESPONSE_STATES.OK) {
+        const newUser = {
+          [USER_FIELDS.ID]: result.data.data[USER_FIELDS.ID],
+          [USER_FIELDS.AVATAR]: result.data.data[USER_FIELDS.AVATAR],
+          [USER_FIELDS.CUSTOMER_NAME]: result.data.data[USER_FIELDS.CUSTOMER_NAME],
+          [USER_FIELDS.CUSTOMER_PHONE]: result.data.data[USER_FIELDS.CUSTOMER_PHONE],
+        };
+
+        user.value = newUser;
+      }
+    })
+      .catch(() => {
+        // handle error
+      });
 };
 </script>
 
 <template>
   <div class="container mx-auto px-4 pt-10">
     <h2 class="text-lg font-semibold text-slate-900 mb-8">Личный кабинет</h2>
-    <UserCard :user="user" />
+    <UserCard
+      v-if="user"
+      :user="user" />
   </div>
 </template>

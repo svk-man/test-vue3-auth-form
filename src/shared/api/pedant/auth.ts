@@ -1,9 +1,11 @@
 import type { AxiosPromise } from "axios";
 import { apiInstance } from "./base";
+import { User } from "./models";
 
 const URLS = {
   GENERATE_OTP: "/generate-otp",
-  VERIFY_OTP: "/verify-otp"
+  VERIFY_OTP: "/verify-otp",
+  SUBSCRIPTIONS: '/subscriptions',
 };
 
 export const FIELDS = {
@@ -48,6 +50,24 @@ export const verifyOtp = (params: VerifyOtpParams): AxiosPromise => {
     {
       headers: {
         'Content-Type': 'application/json',
+      }
+    }
+  );
+};
+
+export type GetSubscriptionsResponse = {
+  data: User,
+  statusText: string,
+}
+
+export const getSubscriptions = (token: string): AxiosPromise<GetSubscriptionsResponse> => {
+  return apiInstance.get(
+    URLS.SUBSCRIPTIONS,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        token,
       }
     }
   );

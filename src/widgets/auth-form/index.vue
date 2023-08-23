@@ -5,6 +5,7 @@ import { GenerateOtpParams, VerifyOtpParams,
 import { ref, watch } from 'vue'
 import { authByPhone } from '~/features/auth'
 import { pedantApi } from '~/shared/api';
+import { useRouter } from 'vue-router';
 
 enum Stages {
   'phone',
@@ -27,16 +28,18 @@ async function submitAuthForm() {
 
 async function sendPhone() {
   const data: GenerateOtpParams = { [FIELDS.PHONE_NUMBER]: phone.value };
-    await pedantApi.auth.generateOtp(data)
-      .then((result: AxiosResponse) => {
-        if (result.statusText === RESPONSE_STATES.OK) {
-          currentStage.value = Stages.code;
-        }
-      })
-      .catch(() => {
-        // handle error
-      });
-}
+  await pedantApi.auth.generateOtp(data)
+    .then((result: AxiosResponse) => {
+      if (result.statusText === RESPONSE_STATES.OK) {
+        currentStage.value = Stages.code;
+      }
+    })
+    .catch(() => {
+      // handle error
+    });
+};
+
+const router = useRouter();
 
 async function sendCode() {
   const data: VerifyOtpParams = {
@@ -44,19 +47,29 @@ async function sendCode() {
     [FIELDS.OTP_CODE]: code.value
   };
 
-  console.log(data);
-
   await pedantApi.auth.verifyOtp(data)
     .then((result: AxiosResponse) => {
       if (result.statusText === RESPONSE_STATES.OK) {
-          currentStage.value = Stages.code;
-        }
-      })
-      .catch((error: AxiosError) => {
-        if (error.response?.statusText === RESPONSE_STATES.UNPROCESSABLE_ENTITY) {
-          errorMessage.value = RESPONSE_ERROR_MESSAGES.INCORRECT_CODE;
-        }
-      });
+        saveToken(result.data['access_token']);
+        router.push({ path: '/personal' })
+      }
+    })
+    .catch((error: AxiosError) => {
+      if (error.response?.statusText === RESPONSE_STATES.UNPROCESSABLE_ENTITY) {
+        errorMessage.value = RESPONSE_ERROR_MESSAGES.INCORRECT_CODE;
+      } else {
+        // handle error
+      }
+    });
+}
+
+function saveToken(token: string) {
+  const date = new Date();
+  date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
+
+  const expires = "expires=" + date.toUTCString();
+  document.cookie =
+    "token=" + token + ";" + expires + ";path=/";
 }
 </script>
 

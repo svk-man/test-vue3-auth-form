@@ -2,6 +2,7 @@
 import { toRefs } from 'vue'
 import type { PropType } from 'vue';
 import type { User } from '~/shared/api';
+import { USER_FIELDS } from '~/shared/api';
 import { UserAvatar } from '../user-avatar';
 
 const props = defineProps({
@@ -18,8 +19,8 @@ const { user } = toRefs(props);
   <article className="flex space-x-6 p-6 bg-blue-300">
       <UserAvatar :user="user" />
       <div>
-        <h2 className="font-semibold text-slate-900 truncate pr-20">{{user.name}}</h2>
-        <p className="mt-2 text-sm leading-6 font-normal">{{user.phone}}</p>
+        <h2 className="font-semibold text-slate-900 truncate pr-20">{{user[USER_FIELDS.CUSTOMER_NAME]}}</h2>
+        <p className="mt-2 text-sm leading-6 font-normal">{{user[USER_FIELDS.CUSTOMER_PHONE]}}</p>
       </div>
     </article>
 </template>
