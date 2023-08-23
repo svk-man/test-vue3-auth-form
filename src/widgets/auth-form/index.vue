@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { AxiosResponse } from 'axios';
+import { GenerateOtpParams } from 'shared/api/pedant/auth';
 import { ref } from 'vue'
 import { authByPhone } from '../../features/auth'
+import { pedantApi } from '../../shared/api';
 
 enum Stages {
   'phone',
@@ -10,9 +13,11 @@ enum Stages {
 const currentStage = Stages.phone;
 const phone = ref('');
 
-function submitAuthForm() {
+async function submitAuthForm() {
   if (currentStage === Stages.phone) {
-    console.log(phone.value);
+    const data: GenerateOtpParams = { phone_number: phone.value};
+    await pedantApi.auth.generateOtp(data)
+      .then((result: AxiosResponse) => console.log(result));
   }
 }
 </script>

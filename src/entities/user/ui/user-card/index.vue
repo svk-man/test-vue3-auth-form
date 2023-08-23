@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toRefs } from 'vue'
 import type { PropType } from 'vue';
-import type { User } from 'shared/api';
+import type { User } from '~/shared/api';
 import { UserAvatar } from '../user-avatar';
 
 const props = defineProps({

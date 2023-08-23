@@ -1,0 +1,1 @@
+export const API_URL = 'https://account-test.pedant.market/api';

@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": "./src",
+    "paths": {
+      "~/*": ["./*"]
+    },
     "moduleResolution": "node",
 
     "target": "ES2020",

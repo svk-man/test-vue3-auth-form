@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { UserCard } from './entities/user'
-import { AuthForm } from './widgets';
+import { UserCard } from '~/entities/user'
+import { AuthForm } from '~/widgets';
 
 const user = {
   id: 1,
